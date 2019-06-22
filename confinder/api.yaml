@@ -1,0 +1,195 @@
+swagger: '2.0'
+
+info:
+  title: Confinder Web API
+  version: '1.0'
+  description: 'REST API for confinder'
+
+basePath: /v1
+
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: API-KEY
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /conferences:
+    get:
+      $handler: confinder.views.conferences
+      tags:
+        - confinder
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          required: no
+          type: integer
+          example: '5'
+        - name: offset
+          in: query
+          required: no
+          type: integer
+          example: '0'
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Not authorized
+
+  /me:
+    get:
+      $handler: confinder.views.me
+      tags:
+        - confinder
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Not authorized
+    post:
+      $handler: confinder.views.change_profile
+      tags:
+      - confinder
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - name: profile
+          in: body
+          type: object
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+              tags:
+                type: array
+                items:
+                  type: string
+              contacts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                    value:
+                      type: string
+
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Not authorized
+
+  /swipe-list/{conference_id}:
+    get:
+      $handler: confinder.views.swipe_list
+      tags:
+        - confinder
+      parameters:
+        - name: conference_id
+          in: path
+          required: yes
+          type: integer
+          description: id of conference
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Not authorized
+
+  /like/{user_id}:
+    post:
+      $handler: confinder.views.like
+      tags:
+      - confinder
+      parameters:
+      - name: user_id
+        in: path
+        required: yes
+        type: string
+        description: id of user to like
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Not authorized
+
+  /dislike/{user_id}:
+    post:
+      $handler: confinder.views.dislike
+      tags:
+      - confinder
+      parameters:
+      - name: user_id
+        in: path
+        required: yes
+        type: string
+        description: id of user to dislike
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Not authorized
+
+  /matches:
+    get:
+      $handler: confinder.views.matches
+      tags:
+        - confinder
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Not authorized
+
+  /participate/{conference_id}:
+    post:
+      $handler: confinder.views.participate
+      tags:
+        - confinder
+      parameters:
+      - name: conference_id
+        in: path
+        required: yes
+        type: integer
+        description: id of conference to participate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Not authorized

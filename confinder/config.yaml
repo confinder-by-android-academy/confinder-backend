@@ -1,0 +1,64 @@
+app:
+  cls: confinder.app.Application
+  client_max_size: 0
+  debug: yes
+  router:
+    cls: aioworkers_aiohttp.router.Router
+    swagger_ui: docs
+    version_ui: 3
+  resources:
+    /v1:
+      include: confinder/api.yaml
+
+mongo:
+  cls: aioworkers_mongo.base.Connector
+  uri: 'mongodb://localhost:27017/'
+
+google_api_key: ''
+
+models:
+  cls: confinder.data.models.base.Model
+  connector: mongo
+
+#redis:
+#  cls: confinder.redis.Connector
+#  prefix: pi
+#  connection:
+#    host: 'localhost'
+#    port: 6379
+
+logging:
+  version: 1
+  disable_existing_loggers: false
+  root:
+    level: DEBUG
+    handlers: [console]
+  formatters:
+    verbose:
+      format: '%(levelname)s %(name)s [%(asctime)s]: %(message)s'
+  handlers:
+    console:
+      level: DEBUG
+      class: logging.StreamHandler
+      formatter: verbose
+    debug_console:
+      level: DEBUG
+      class: logging.StreamHandler
+      formatter: verbose
+  loggers:
+    aiohttp:
+      level: DEBUG
+      handlers: [debug_console]
+      propagate: true
+    aioworkers:
+      level: DEBUG
+      handlers: [debug_console]
+      propagate: true
+    asyncio:
+      level: DEBUG
+      handlers: []
+      propagate: true
+    confinder:
+      level: DEBUG
+      handlers: []
+      propagate: true
